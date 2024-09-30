@@ -10,6 +10,8 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+from tqdm import tqdm
+
 
 # Function to process each CSV file
 def process_csv(file_path):
@@ -79,7 +81,9 @@ def generate_html_report(data, output_html):
         f.write("<html><body>\n")
         f.write("<h1>Image Views Report</h1>\n")
 
-        for idx, (url, (timestamps, views)) in enumerate(data.items()):
+        for idx, (url, (timestamps, views)) in tqdm(
+            enumerate(data.items()), total=len(data)
+        ):
             try:
                 # Fetch the image from the URL
                 response = requests.get(url)
