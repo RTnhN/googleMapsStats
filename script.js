@@ -2,7 +2,6 @@
 // https://codebeautify.org/multiline-to-single-line
 javascript:(function() {
     // Return early if not on the correct URL
-
     if (!window.location.href.startsWith('https://www.google.com/maps/contrib')) {
         alert('This script only works on https://www.google.com/maps/contrib');
         return;
@@ -41,14 +40,13 @@ javascript:(function() {
         const csvData = convertToCSV(data);
         const blob = new Blob([csvData], { type: 'text/csv' });
 
-        // Get the current date and time, including hours, minutes, and seconds
         const today = new Date();
-        const dateString = today.toISOString().split('T')[0];
-        const timeString = `${today.getHours()}-${today.getMinutes()}-${today.getSeconds()}`;
-        const filename = `image_data_${dateString}_${timeString}.csv`;
+        const dateString = today.toISOString().replace(/:/g, '_');
+
+        // Filename with date and time
+        const filename = `imageData+${dateString}.csv`;
 
         const url = window.URL.createObjectURL(blob);
-
         const a = document.createElement('a');
         a.setAttribute('href', url);
         a.setAttribute('download', filename);
