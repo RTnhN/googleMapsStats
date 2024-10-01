@@ -15,7 +15,9 @@ from tqdm import tqdm
 
 # Function to process each CSV file
 def process_csv(file_path):
-    data = {}
+    views_data = {}
+    capture_data = {}
+
     with open(file_path, mode="r") as file:
         reader = csv.reader(file)
         next(reader)  # Skip the header row
@@ -23,9 +25,10 @@ def process_csv(file_path):
             if len(row) < 2:
                 continue  # Skip invalid rows
             url = row[0]
-            views = int(row[1])
-            data[url] = views
-    return data
+            views_data[url] = int(row[1])
+            if len(row) == 3:
+                capture_data[url] = row[2]
+    return views_data, capture_data
 
 
 # Function to extract the timestamp from the filename
@@ -48,6 +51,7 @@ def extract_timestamp(file_name):
 # Main function to combine the dictionaries
 def combine_dictionaries(folder_path):
     combined_dict = defaultdict(list)  # Store URLs with lists of views by timestamp
+    capture_date_dict = {}
 
     for file_name in os.listdir(folder_path):
         if file_name.endswith(".csv"):
@@ -55,10 +59,11 @@ def combine_dictionaries(folder_path):
             timestamp = extract_timestamp(file_name)
             if timestamp:
                 file_path = os.path.join(folder_path, file_name)
-                file_data = process_csv(file_path)
+                views_data, capture_data = process_csv(file_path)
+                capture_date_dict = capture_date_dict | capture_data
 
                 # Add each entry to the combined dictionary
-                for url, views in file_data.items():
+                for url, views in views_data.items():
                     combined_dict[url].append((timestamp, views))
 
     # Sort the views list for each URL by timestamp
@@ -71,11 +76,11 @@ def combine_dictionaries(folder_path):
         for url, views_list in combined_dict.items()
     }
 
-    return final_dict
+    return final_dict, capture_date_dict
 
 
 # Function to generate HTML with embedded SVG plots and images, side by side
-def generate_html_report(data, output_html):
+def generate_html_report(data, capture_date_dict, output_html):
     svg_filename = "tmp.svg"
     with open(output_html, "w") as f:
         f.write("<html><body>\n")
@@ -101,7 +106,7 @@ def generate_html_report(data, output_html):
                 plt.close(fig)
 
                 # Write the image and the plot to the HTML file, side by side
-                f.write(f"<h2>{url}</h2>\n")
+                f.write(f"<b>Image Capture Date:</b> {capture_date_dict[url]}<br>\n")
                 f.write('<div style="display: flex; align-items: center;">\n')
 
                 # Embed the image in one div
@@ -129,10 +134,10 @@ def generate_html_report(data, output_html):
 
 # Example usage:
 folder_path = "Data"
-combined_dict = combine_dictionaries(folder_path)
+combined_dict, capture_date_dict = combine_dictionaries(folder_path)
 
 # Generate the HTML report
 output_html = "index.html"
-generate_html_report(combined_dict, output_html)
+generate_html_report(combined_dict, capture_date_dict, output_html)
 
 print(f"HTML report generated: {output_html}")
