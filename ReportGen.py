@@ -87,6 +87,7 @@ def generate_html_report(data, output_html):
             try:
                 # Create a plot for views over time (this will now be done in the background)
                 fig, ax = plt.subplots()
+                ax.plot(timestamps, views, marker=".")
                 ax.set_xlabel("Time (UTC)")
                 ax.set_ylabel("Views")
                 fig.autofmt_xdate()  # Automatically rotates and formats the dates
