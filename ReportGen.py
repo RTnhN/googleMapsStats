@@ -85,10 +85,6 @@ def generate_html_report(data, output_html):
             enumerate(data.items()), total=len(data)
         ):
             try:
-                # Fetch the image from the URL
-                response = requests.get(url)
-                img = Image.open(BytesIO(response.content))
-
                 # Create a plot for views over time (this will now be done in the background)
                 fig, ax = plt.subplots()
                 ax.plot(timestamps, views, marker="o")
