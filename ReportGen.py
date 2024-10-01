@@ -6,9 +6,6 @@ import matplotlib
 
 matplotlib.use("Agg")  # Use the 'Agg' backend for background plot generation
 import matplotlib.pyplot as plt
-from PIL import Image
-import requests
-from io import BytesIO
 
 from tqdm import tqdm
 
