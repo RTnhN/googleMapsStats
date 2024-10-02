@@ -10,6 +10,24 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
+def dict_merge(dict1, dict2):
+    combined = {}
+
+    # Combine values, prioritizing non-"Unknown" values
+    for key in set(dict1) | set(dict2):  # Union of keys from both dictionaries
+        value1 = dict1.get(key, "Unknown")
+        value2 = dict2.get(key, "Unknown")
+
+        if value1 != "Unknown":
+            combined[key] = value1
+        elif value2 != "Unknown":
+            combined[key] = value2
+        else:
+            combined[key] = "Unknown"
+
+    return combined
+
+
 # Function to process each CSV file
 def process_csv(file_path):
     views_data = {}
@@ -57,7 +75,7 @@ def combine_dictionaries(folder_path):
             if timestamp:
                 file_path = os.path.join(folder_path, file_name)
                 views_data, capture_data = process_csv(file_path)
-                capture_date_dict = capture_date_dict | capture_data
+                capture_date_dict = dict_merge(capture_date_dict, capture_data)
 
                 # Add each entry to the combined dictionary
                 for url, views in views_data.items():
