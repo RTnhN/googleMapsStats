@@ -100,7 +100,7 @@ def generate_html_report(data, capture_date_dict, output_html):
 
         with ProcessPoolExecutor() as executor:
             futures = {
-                executor.submit(plot_data, url, timestamps, views): url
+                executor.submit(plot_data, timestamps, views): url
                 for url, (timestamps, views) in data.items()
             }
             for future in tqdm(futures, total=len(data)):
