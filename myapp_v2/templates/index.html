@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Link Pairer</title>
+  <style>
+    .grid { display: grid; grid-template-columns: repeat(auto-fill,100px); gap:10px; }
+    img { width:100px; cursor:pointer; border:2px solid transparent; }
+    img.selected { border-color: red; }
+  </style>
+</head>
+<body>
+  <h1>Select a GPS then an Other</h1>
+  <div>
+    <h2>GPS Images</h2>
+    <div id="gps" class="grid"></div>
+  </div>
+  <div>
+    <h2>Other Images</h2>
+    <div id="other" class="grid"></div>
+  </div>
+  <h2>Pairs</h2>
+  <pre id="pairs"></pre>
+  <script src="/static/app.js"></script>
+</body>
+</html>
